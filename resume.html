@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>برنامه‌نویس و طراح | آراد عمویی </title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --glass: rgba(255,255,255,0.08);
+    --glass-border: rgba(255,255,255,0.18);
+    --glass-hover: rgba(255,255,255,0.14);
+    --accent: #7fffd4;
+    --accent2: #a78bfa;
+    --accent3: #fb923c;
+    --bg-dark: #060612;
+    --text: #e8e8f0;
+    --text-dim: rgba(232,232,240,0.55);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Vazirmatn', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ─── ANIMATED BG ─── */
+  .bg-canvas {
+    position: fixed; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse 80% 60% at 20% 10%, rgba(119,77,255,0.22) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 80% 80%, rgba(127,255,212,0.14) 0%, transparent 60%),
+                radial-gradient(ellipse 70% 60% at 50% 50%, rgba(6,6,18,1) 40%, transparent 100%);
+    animation: bgPulse 12s ease-in-out infinite alternate;
+  }
+  @keyframes bgPulse {
+    0%  { filter: hue-rotate(0deg); }
+    100%{ filter: hue-rotate(30deg); }
+  }
+
+  /* floating orbs */
+  .orb {
+    position: fixed; border-radius: 50%; filter: blur(80px); z-index: 0; pointer-events: none;
+  }
+  .orb1 { width:500px; height:500px; top:-150px; right:-100px;
+           background: radial-gradient(circle, rgba(167,139,250,0.3),transparent 70%);
+           animation: orbFloat1 18s ease-in-out infinite; }
+  .orb2 { width:400px; height:400px; bottom:-100px; left:-80px;
+           background: radial-gradient(circle, rgba(127,255,212,0.25),transparent 70%);
+           animation: orbFloat2 14s ease-in-out infinite; }
+  .orb3 { width:300px; height:300px; top:40%; left:40%;
+           background: radial-gradient(circle, rgba(251,146,60,0.18),transparent 70%);
+           animation: orbFloat3 20s ease-in-out infinite; }
+
+  @keyframes orbFloat1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-60px,80px) scale(1.1)} }
+  @keyframes orbFloat2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(80px,-60px) scale(1.15)} }
+  @keyframes orbFloat3 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(50px,-40px)} 66%{transform:translate(-40px,60px)} }
+
+  /* ─── LAYOUT ─── */
+  .wrapper { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:0 20px; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    padding: 16px 0;
+    backdrop-filter: blur(24px) saturate(1.8);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    background: rgba(6,6,18,0.55);
+    border-bottom: 1px solid var(--glass-border);
+    transition: background .3s;
+  }
+  nav .nav-inner {
+    max-width:1100px; margin:0 auto; padding:0 24px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .nav-logo {
+    font-size:1.1rem; font-weight:700; letter-spacing:.04em;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color:transparent;
+    background-clip: text;
+  }
+  .nav-links { display:flex; gap:8px; }
+  .nav-links a {
+    text-decoration:none; color:var(--text-dim); font-size:.82rem; font-weight:500;
+    padding:7px 16px; border-radius:50px; transition:.3s;
+    border: 1px solid transparent;
+  }
+  .nav-links a:hover {
+    color:var(--text); border-color:var(--glass-border);
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+  }
+  .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+  .hamburger span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:.3s; }
+
+  /* ─── GLASS CARD ─── */
+  .glass-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    backdrop-filter: blur(20px) saturate(1.6);
+    -webkit-backdrop-filter: blur(20px) saturate(1.6);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
+    transition: transform .3s ease, box-shadow .3s ease, background .3s;
+  }
+  .glass-card:hover {
+    background: var(--glass-hover);
+    box-shadow: 0 16px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18);
+    transform: translateY(-4px);
+  }
+
+  /* ─── LIQUID GLASS BUTTON ─── */
+  .btn-liquid {
+    display: inline-flex; align-items:center; gap:8px;
+    padding: 12px 28px; border-radius:50px;
+    font-family: 'Vazirmatn', sans-serif; font-size:.9rem; font-weight:600;
+    cursor:pointer; text-decoration:none; border:none; outline:none;
+    position:relative; overflow:hidden;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: var(--text);
+    backdrop-filter: blur(16px) saturate(2);
+    -webkit-backdrop-filter: blur(16px) saturate(2);
+    box-shadow:
+      0 4px 24px rgba(0,0,0,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.2),
+      inset 0 -1px 0 rgba(0,0,0,0.2);
+    transition: all .35s cubic-bezier(.23,1,.32,1);
+  }
+  .btn-liquid::before {
+    content:''; position:absolute; inset:0; border-radius:inherit;
+    background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%);
+    pointer-events:none;
+  }
+  .btn-liquid::after {
+    content:''; position:absolute;
+    width:200%; height:200%; top:-50%; left:-150%;
+    background: radial-gradient(circle, rgba(255,255,255,0.35) 0%, transparent 60%);
+    transition: left .5s ease, opacity .5s;
+    opacity:0;
+  }
+  .btn-liquid:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.2);
+    background: rgba(255,255,255,0.11);
+  }
+  .btn-liquid:hover::after { left:-30%; opacity:1; }
+  .btn-liquid:active { transform: scale(.97); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, rgba(127,255,212,0.25), rgba(167,139,250,0.2));
+    border-color: rgba(127,255,212,0.4);
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(127,255,212,0.5);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, rgba(127,255,212,0.35), rgba(167,139,250,0.3));
+    box-shadow: 0 12px 40px rgba(127,255,212,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+  .btn-secondary {
+    background: linear-gradient(135deg, rgba(167,139,250,0.2), rgba(251,146,60,0.15));
+    border-color: rgba(167,139,250,0.4);
+    color: var(--accent2);
+  }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh; display:flex; align-items:center;
+    padding-top: 80px;
+  }
+  .hero-grid {
+    display: grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;
+    padding: 60px 0;
+  }
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:6px 16px; border-radius:50px; font-size:.75rem; font-weight:600;
+    background: rgba(127,255,212,0.1); border:1px solid rgba(127,255,212,0.3);
+    color:var(--accent); letter-spacing:.06em; text-transform:uppercase;
+    margin-bottom:20px; animation: fadeSlide .8s ease both;
+  }
+  .badge-dot { width:7px;height:7px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 8px var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+
+  .hero-name {
+    font-size: clamp(2.8rem,5vw,4.2rem); font-weight:900; line-height:1.1;
+    animation: fadeSlide .9s .1s ease both;
+  }
+  .hero-name .line1 { display:block; color:var(--text); }
+  .hero-name .line2 {
+    display:block;
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+    background-size:200%;
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    animation: gradShift 4s ease infinite alternate, fadeSlide .9s .1s ease both;
+  }
+  @keyframes gradShift { 0%{background-position:0%} 100%{background-position:100%} }
+
+  .hero-title {
+    font-size:1rem; font-weight:400; color:var(--text-dim); margin:12px 0 24px;
+    animation: fadeSlide .9s .2s ease both;
+  }
+  .hero-desc {
+    font-size:.9rem; line-height:1.8; color:var(--text-dim); max-width:460px;
+    margin-bottom:32px; animation: fadeSlide .9s .3s ease both;
+  }
+  .hero-btns { display:flex; gap:12px; flex-wrap:wrap; animation: fadeSlide .9s .4s ease both; }
+
+  /* ─── 3D AVATAR CARD ─── */
+  .avatar-wrap {
+    perspective: 900px; cursor:pointer;
+    animation: fadeSlide .9s .2s ease both;
+  }
+  .avatar-card {
+    width:100%; max-width:340px; margin:0 auto;
+    padding:32px; border-radius:24px;
+    transform-style: preserve-3d;
+    transition: transform .08s ease;
+    position:relative;
+    background: linear-gradient(145deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03));
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(24px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .avatar-card::before {
+    content:''; position:absolute; inset:-1px; border-radius:25px; z-index:-1;
+    background: linear-gradient(135deg, rgba(127,255,212,0.3), transparent 40%, rgba(167,139,250,0.3));
+    opacity:0; transition:opacity .3s;
+  }
+  .avatar-wrap:hover .avatar-card::before { opacity:1; }
+
+  .avatar-img {
+    width:100px; height:100px; border-radius:50%; margin:0 auto 20px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:3rem;
+    background: linear-gradient(135deg, rgba(127,255,212,0.2), rgba(167,139,250,0.2));
+    border: 2px solid rgba(127,255,212,0.4);
+    box-shadow: 0 0 30px rgba(127,255,212,0.2), 0 0 60px rgba(167,139,250,0.1);
+    transform: translateZ(20px);
+
+  }
+  .avatar-name { text-align:center; font-size:1.2rem; font-weight:700; margin-bottom:6px; transform:translateZ(14px); }
+  .avatar-role { text-align:center; font-size:.82rem; color:var(--accent); margin-bottom:20px; transform:translateZ(10px); }
+  .avatar-stats {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:12px; transform:translateZ(12px);
+  }
+  .stat-item { text-align:center; padding:10px 6px; border-radius:12px;
+    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); }
+  .stat-num { font-size:1.2rem; font-weight:800; color:var(--accent); }
+  .stat-lbl { font-size:.65rem; color:var(--text-dim); margin-top:2px; }
+
+  /* ─── SECTION HEADERS ─── */
+  .section { padding:80px 0; }
+  .section-label {
+    font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:10px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .section-label::before {
+    content:''; width:30px; height:1px; background:var(--accent);
+    box-shadow:0 0 8px var(--accent);
+  }
+  .section-title { font-size:clamp(1.8rem,3vw,2.5rem); font-weight:900; margin-bottom:48px; }
+
+  /* ─── SKILLS ─── */
+  .skills-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
+  .skill-block { padding:24px; border-radius:18px; }
+  .skill-icon { font-size:2rem; margin-bottom:14px; }
+  .skill-title { font-size:1rem; font-weight:700; margin-bottom:16px; }
+  .skill-bars { display:flex; flex-direction:column; gap:10px; }
+  .skill-row { display:flex; flex-direction:column; gap:5px; }
+  .skill-info { display:flex; justify-content:space-between; font-size:.78rem; }
+  .skill-name { color:var(--text-dim); }
+  .skill-pct { color:var(--accent); font-weight:600; }
+  .bar-track {
+    height:5px; border-radius:50px;
+    background:rgba(255,255,255,0.07); overflow:hidden;
+  }
+  .bar-fill {
+    height:100%; border-radius:50px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    box-shadow:0 0 10px rgba(127,255,212,0.4);
+    width:0; transition:width 1.2s cubic-bezier(.23,1,.32,1);
+  }
+  .bar-fill.animated { width: var(--w); }
+
+  /* ─── EXPERIENCE ─── */
+  .timeline { position:relative; padding-right:32px; }
+  .timeline::before {
+    content:''; position:absolute; right:0; top:8px; bottom:8px; width:1px;
+    background:linear-gradient(to bottom, var(--accent), var(--accent2), transparent);
+  }
+  .timeline-item { position:relative; padding:0 28px 40px 0; }
+  .timeline-dot {
+    position:absolute; right:-8px; top:6px;
+    width:16px; height:16px; border-radius:50%;
+    background:var(--accent); border:3px solid var(--bg-dark);
+    box-shadow:0 0 12px var(--accent);
+    transition:transform .3s;
+  }
+  .timeline-item:hover .timeline-dot { transform:scale(1.4); }
+  .timeline-card { padding:22px 24px; border-radius:16px; }
+  .timeline-period {
+    font-size:.72rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:6px;
+  }
+  .timeline-role { font-size:1.05rem; font-weight:700; margin-bottom:4px; }
+  .timeline-company { font-size:.85rem; color:var(--text-dim); margin-bottom:10px; }
+  .timeline-desc { font-size:.82rem; line-height:1.75; color:var(--text-dim); }
+
+  /* ─── PROJECTS ─── */
+  .projects-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; }
+  .project-card { padding:28px; border-radius:20px; position:relative; overflow:hidden; }
+  .project-card::before {
+    content:''; position:absolute; inset:0; opacity:0;
+    background: radial-gradient(circle at 30% 40%, rgba(127,255,212,0.08), transparent 70%);
+    transition:opacity .4s;
+  }
+  .project-card:hover::before { opacity:1; }
+  .project-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; }
+  .project-icon { font-size:1.8rem; }
+  .project-tag {
+    font-size:.65rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    padding:4px 10px; border-radius:20px;
+    background:rgba(127,255,212,0.1); border:1px solid rgba(127,255,212,0.25);
+    color:var(--accent);
+  }
+  .project-name { font-size:1.1rem; font-weight:700; margin-bottom:8px; }
+  .project-desc { font-size:.82rem; line-height:1.7; color:var(--text-dim); margin-bottom:16px; }
+  .project-tech { display:flex; flex-wrap:wrap; gap:6px; }
+  .tech-chip {
+    font-size:.68rem; padding:4px 10px; border-radius:20px;
+    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12);
+    color:var(--text-dim);
+  }
+
+  /* ─── CONTACT ─── */
+  .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; }
+  .contact-info { display:flex; flex-direction:column; gap:16px; }
+  .contact-item {
+    display:flex; align-items:center; gap:16px;
+    padding:16px 20px; border-radius:14px;
+  }
+  .contact-ico { font-size:1.3rem; width:42px; height:42px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(127,255,212,0.1); border:1px solid rgba(127,255,212,0.2); }
+  .contact-text .lbl { font-size:.7rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; }
+  .contact-text .val { font-size:.9rem; font-weight:500; margin-top:2px; }
+
+  /* ─── CONTACT FORM ─── */
+  .contact-form { display:flex; flex-direction:column; gap:14px; }
+  .form-field {
+    padding:14px 18px; border-radius:14px; width:100%;
+    font-family:'Vazirmatn',sans-serif; font-size:.88rem;
+    color:var(--text); outline:none; resize:none;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.12);
+    backdrop-filter:blur(8px);
+    transition:border-color .3s, background .3s;
+  }
+  .form-field::placeholder { color:var(--text-dim); }
+  .form-field:focus {
+    border-color:rgba(127,255,212,0.45);
+    background:rgba(255,255,255,0.08);
+    box-shadow:0 0 0 3px rgba(127,255,212,0.1);
+  }
+  textarea.form-field { height:110px; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding:30px 0; text-align:center;
+    border-top:1px solid rgba(255,255,255,0.07);
+    font-size:.78rem; color:var(--text-dim);
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal { opacity:0; transform:translateY(30px); transition:opacity .8s ease,transform .8s ease; }
+  .reveal.visible { opacity:1; transform:none; }
+
+  @keyframes fadeSlide { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
+
+  /* ─── SCROLL TOP ─── */
+  .scroll-top {
+    position:fixed; bottom:28px; left:28px; z-index:200;
+    width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.1rem; cursor:pointer; opacity:0; pointer-events:none;
+    transition:opacity .3s, transform .3s;
+  }
+  .scroll-top.show { opacity:1; pointer-events:auto; }
+  .scroll-top:hover { transform:translateY(-4px); }
+
+  /* ─── RESPONSIVE ─── */
+  @media(max-width:768px){
+    .hero-grid { grid-template-columns:1fr; gap:40px; }
+    .avatar-wrap { order:-1; }
+    .contact-grid { grid-template-columns:1fr; }
+    .nav-links { display:none; position:fixed; inset:0; top:60px;
+      background:rgba(6,6,18,0.97); flex-direction:column; align-items:center;
+      justify-content:center; gap:20px; z-index:99;
+      backdrop-filter:blur(20px); }
+    .nav-links.open { display:flex; }
+    .nav-links a { font-size:1.1rem; }
+    .hamburger { display:flex; }
+    .section { padding:60px 0; }
+    .hero-btns { justify-content:center; }
+    .hero-name,.hero-desc,.hero-badge { text-align:center; }
+    .section-label,.section-title { text-align:center; }
+    .section-label::before { display:none; }
+    .timeline { padding-right:20px; }
+  }
+  @media(max-width:480px){
+    .skills-grid { grid-template-columns:1fr; }
+    .projects-grid { grid-template-columns:1fr; }
+    .hero-btns { flex-direction:column; align-items:stretch; text-align:center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BG -->
+<div class="bg-canvas"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">آراد عمویی</span>
+    <div class="nav-links" id="navLinks">
+      <a href="#hero">خانه</a>
+      <a href="#skills">مهارت‌ها</a>
+      <a href="#experience">تجربه</a>
+      <a href="#projects">پروژه‌ها</a>
+      <a href="#contact">تماس</a>
+    </div>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="wrapper">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge"><span class="badge-dot"></span>آماده همکاری</div>
+        <h1 class="hero-name">
+          <span class="line1">آراد عمویی</span>
+          <span class="line2">برنامه‌نویس طراح‌سایت</span>
+        </h1>
+        <p class="hero-title">arad mza · mza group · seven eyes · nevrox studio</p>
+        <p class="hero-desc">
+           آراد عمویی، برنامه‌نویس و طراح با ۳ سال تجربه در پایتون، فتوشاپ، پریمیر و طراحی وب.   
+        </p>
+        <div class="hero-btns">
+          <a href="#projects" class="btn-liquid btn-secondary">🚀 مشاهده پروژه‌ها</a>
+        </div>
+      </div>
+      <div class="avatar-wrap" id="avatarWrap">
+        <div class="avatar-card glass-card" id="avatarCard">
+          <div class="avatar-img">🧑‍💻</div>
+          <div class="avatar-name">آراد عمویی</div>
+          <div class="avatar-role">Full-Stack Developer</div>
+          <div class="avatar-stats">
+            <div class="stat-item">
+              <div class="stat-num">3+</div>
+              <div class="stat-lbl">سال تجربه</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">13</div>
+              <div class="stat-lbl">پروژه</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">98٪</div>
+              <div class="stat-lbl">رضایت</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="section">
+  <div class="wrapper">
+    <div class="reveal">
+      <div class="section-label">تخصص‌ها</div>
+      <h2 class="section-title">مهارت‌های فنی</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="glass-card skill-block reveal">
+        <div class="skill-icon">⚛️</div>
+        <div class="skill-title">فرانت‌اند</div>
+        <div class="skill-bars">
+          <div class="skill-row"><div class="skill-info"><span class="skill-name">React / Next.js</span><span class="skill-pct">95%</span></div><div class="bar-track"><div class="bar-fill" style="--w:95%"></div></div></div>
+          <div class="skill-row"><div class="skill-info"><span class="skill-name">TypeScript</span><span class="skill-pct">90%</span></div><div class="bar-track"><div class="bar-fill" style="--w:90%"></div></div></div>
+          <div class="skill-row"><div class="skill-info"><span class="skill-name">CSS / Tailwind</span><span class="skill-pct">92%</span></div><div class="bar-track"><div class="bar-fill" style="--w:92%"></div></div></div>
+          <div class="skill-row"><div class="skill-info"><span class="skill-name">Three.js / WebGL</span><span class="skill-pct">75%</span></div><div class="bar-track"><div class="bar-fill" style="--w:75%"></div></div></div>
+        </div>
+      </div>
+      <div class="glass-card skill-block reveal">
+        <div class="skill-icon">⚙️</div>
+        <div class="skill-title">بک‌اند</div>
+        <div class="skill-bars">
+          <div class="skill-row"><div class="skill-info"><span class="skill-name">Node.js / Express</span><span class="skill-pct">88%</span></div><div class="bar-track"><div class="bar-fill" style="--w:88%"></div></div></div>
+          <div class="skill-row"><div class="skill-info"><span class="skill-name">Python / FastAPI</span><span class="skill-pct">82%</span></div><div class="bar-track"><div class="bar-fill" style="--w:82%"></div></div></div>
+          <div class="skill-row"><div class="skill-info"><span class="skill-name">PostgreSQL / MongoDB</span><span class="skill-pct">85%</span></div><div class="bar-track"><div class="bar-fill" style="--w:85%"></div></div></div>
+          <div class="skill-row"><div class="skill-info"><span class="skill-name">GraphQL / REST</span><span class="skill-pct">90%</span></div><div class="bar-track"><div class="bar-fill" style="--w:90%"></div></div></div>
+        </div>
+      </div>
+      <div class="glass-card skill-block reveal">
+        <div class="skill-icon">☁️</div>
+        <div class="skill-title">ابر و DevOps</div>
+        <div class="skill-bars">
+          <div class="skill-row"><div class="skill-info"><span class="skill-name">AWS / GCP</span><span class="skill-pct">80%</span></div><div class="bar-track"><div class="bar-fill" style="--w:80%"></div></div></div>
+          <div class="skill-row"><div class="skill-info"><span class="skill-name">Docker / Kubernetes</span><span class="skill-pct">78%</span></div><div class="bar-track"><div class="bar-fill" style="--w:78%"></div></div></div>
+          <div class="skill-row"><div class="skill-info"><span class="skill-name">CI/CD Pipelines</span><span class="skill-pct">85%</span></div><div class="bar-track"><div class="bar-fill" style="--w:85%"></div></div></div>
+          <div class="skill-row"><div class="skill-info"><span class="skill-name">Linux / Nginx</span><span class="skill-pct">82%</span></div><div class="bar-track"><div class="bar-fill" style="--w:82%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="section">
+  <div class="wrapper">
+    <div class="reveal">
+      <div class="section-label">سابقه کاری</div>
+      <h2 class="section-title">تجربیات حرفه‌ای</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="glass-card timeline-card">
+          <div class="timeline-period">۲۰۲۳ — اکنون</div>
+          <div class="timeline-role">ارشد توسعه‌دهنده فول‌استک</div>
+          <div class="timeline-company">دیجی‌کالا — تهران</div>
+          <div class="timeline-desc">معماری و توسعه پلتفرم فروشگاهی با بیش از ۲ میلیون کاربر فعال روزانه. بهینه‌سازی عملکرد و کاهش ۴۰٪ زمان بارگذاری صفحه.</div>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot" style="background:var(--accent2);box-shadow:0 0 12px var(--accent2)"></div>
+        <div class="glass-card timeline-card">
+          <div class="timeline-period" style="color:var(--accent2)">۲۰۲۱ — ۲۰۲۳</div>
+          <div class="timeline-role">توسعه‌دهنده فرانت‌اند</div>
+          <div class="timeline-company">اسنپ‌فود — تهران</div>
+          <div class="timeline-desc">ساخت داشبوردهای مدیریت و بهینه‌سازی تجربه کاربری اپلیکیشن موبایل. طراحی سیستم Design System با ۱۵۰+ کامپوننت.</div>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot" style="background:var(--accent3);box-shadow:0 0 12px var(--accent3)"></div>
+        <div class="glass-card timeline-card">
+          <div class="timeline-period" style="color:var(--accent3)">۲۰۱۹ — ۲۰۲۱</div>
+          <div class="timeline-role">توسعه‌دهنده وب</div>
+          <div class="timeline-company">آژانس دیجیتال نوآور — اصفهان</div>
+          <div class="timeline-desc">طراحی و توسعه وب‌سایت برای بیش از ۲۰ برند مختلف. تخصص در SEO تکنیکال و بهینه‌سازی Core Web Vitals.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="section">
+  <div class="wrapper">
+    <div class="reveal">
+      <div class="section-label">نمونه کار</div>
+      <h2 class="section-title">پروژه‌های برجسته</h2>
+    </div>
+    <div class="projects-grid">
+      <div class="glass-card project-card reveal">
+        <div class="project-top">
+          <div class="project-icon">🛒</div>
+          <span class="project-tag">E-Commerce</span>
+        </div>
+        <div class="project-name">پلتفرم فروشگاهی Nova</div>
+        <div class="project-desc">فروشگاه آنلاین با پرداخت لحظه‌ای، مدیریت موجودی هوشمند و داشبورد تحلیل فروش.</div>
+        <div class="project-tech">
+          <span class="tech-chip">Next.js</span><span class="tech-chip">Stripe</span><span class="tech-chip">PostgreSQL</span><span class="tech-chip">Redis</span>
+        </div>
+      </div>
+      <div class="glass-card project-card reveal">
+        <div class="project-top">
+          <div class="project-icon">🤖</div>
+          <span class="project-tag" style="color:var(--accent2);background:rgba(167,139,250,0.1);border-color:rgba(167,139,250,0.3)">AI</span>
+        </div>
+        <div class="project-name">دستیار هوش مصنوعی Nexa</div>
+        <div class="project-desc">چت‌بات هوشمند با قابلیت تحلیل اسناد، ترجمه و تولید محتوا برای کسب‌وکارها.</div>
+        <div class="project-tech">
+          <span class="tech-chip">React</span><span class="tech-chip">OpenAI API</span><span class="tech-chip">FastAPI</span><span class="tech-chip">Vector DB</span>
+        </div>
+      </div>
+      <div class="glass-card project-card reveal">
+        <div class="project-top">
+          <div class="project-icon">📊</div>
+          <span class="project-tag" style="color:var(--accent3);background:rgba(251,146,60,0.1);border-color:rgba(251,146,60,0.3)">Dashboard</span>
+        </div>
+        <div class="project-name">داشبورد Analytics Pro</div>
+        <div class="project-desc">پلتفرم تحلیل داده Real-time با نمودارهای تعاملی، گزارش‌سازی خودکار و هشدارهای هوشمند.</div>
+        <div class="project-tech">
+          <span class="tech-chip">Vue 3</span><span class="tech-chip">D3.js</span><span class="tech-chip">WebSocket</span><span class="tech-chip">TimescaleDB</span>
+        </div>
+      </div>
+      <div class="glass-card project-card reveal">
+        <div class="project-top">
+          <div class="project-icon">📱</div>
+          <span class="project-tag">Mobile</span>
+        </div>
+        <div class="project-name">اپلیکیشن سلامتی LifeTrack</div>
+        <div class="project-desc">اپ ردیابی سلامتی با گمیفیکیشن، ادغام با دستگاه‌های پوشیدنی و برنامه‌های تغذیه.</div>
+        <div class="project-tech">
+          <span class="tech-chip">React Native</span><span class="tech-chip">Expo</span><span class="tech-chip">Firebase</span><span class="tech-chip">HealthKit</span>
+        </div>
+      </div>
+      <div class="glass-card project-card reveal">
+        <div class="project-top">
+          <div class="project-icon">🌐</div>
+          <span class="project-tag" style="color:var(--accent2);background:rgba(167,139,250,0.1);border-color:rgba(167,139,250,0.3)">Web3</span>
+        </div>
+        <div class="project-name">پلتفرم NFT Artverse</div>
+        <div class="project-desc">بازار خرید و فروش آثار هنری دیجیتال با قراردادهای هوشمند و ولت‌های Web3.</div>
+        <div class="project-tech">
+          <span class="tech-chip">Next.js</span><span class="tech-chip">Solidity</span><span class="tech-chip">IPFS</span><span class="tech-chip">Ethers.js</span>
+        </div>
+      </div>
+      <div class="glass-card project-card reveal">
+        <div class="project-top">
+          <div class="project-icon">🎮</div>
+          <span class="project-tag" style="color:var(--accent3);background:rgba(251,146,60,0.1);border-color:rgba(251,146,60,0.3)">3D / WebGL</span>
+        </div>
+        <div class="project-name">تجربه تعاملی Cosmos</div>
+        <div class="project-desc">تجربه سه‌بعدی مرورگر با Three.js، شبیه‌سازی فیزیک و انیمیشن‌های پارتیکل.</div>
+        <div class="project-tech">
+          <span class="tech-chip">Three.js</span><span class="tech-chip">WebGL</span><span class="tech-chip">GSAP</span><span class="tech-chip">Shader</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrapper">
+    <p>ساخته شده با ❤️ توسط آراد عمویی — 2026</p>
+  </div>
+</footer>
+
+<!-- SCROLL TOP -->
+<button class="btn-liquid scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+/* ── Hamburger ── */
+function toggleMenu(){
+  const m = document.getElementById('navLinks');
+  m.classList.toggle('open');
+}
+document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>{
+  document.getElementById('navLinks').classList.remove('open');
+}));
+
+/* ── Scroll reveal ── */
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      // animate bars
+      e.target.querySelectorAll('.bar-fill').forEach(b=>b.classList.add('animated'));
+    }
+  });
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+
+/* also observe bars globally on scroll */
+const barObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('animated');});
+},{threshold:0.3});
+document.querySelectorAll('.bar-fill').forEach(b=>barObserver.observe(b));
+
+/* ── Scroll top ── */
+const st = document.getElementById('scrollTop');
+window.addEventListener('scroll',()=>{
+  st.classList.toggle('show', window.scrollY > 300);
+});
+
+/* ── 3D tilt ── */
+const wrap = document.getElementById('avatarWrap');
+const card = document.getElementById('avatarCard');
+if(wrap){
+  wrap.addEventListener('mousemove',e=>{
+    const r = wrap.getBoundingClientRect();
+    const x = (e.clientX - r.left)/r.width - .5;
+    const y = (e.clientY - r.top)/r.height - .5;
+    card.style.transform = `rotateY(${x*20}deg) rotateX(${-y*20}deg) scale(1.03)`;
+  });
+  wrap.addEventListener('mouseleave',()=>{
+    card.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
+    card.style.transition = 'transform .5s ease';
+  });
+  wrap.addEventListener('mouseenter',()=>{ card.style.transition = 'transform .08s ease'; });
+}
+
+/* ── Touch tilt for mobile ── */
+if(wrap){
+  wrap.addEventListener('touchmove',e=>{
+    const touch = e.touches[0];
+    const r = wrap.getBoundingClientRect();
+    const x = (touch.clientX - r.left)/r.width - .5;
+    const y = (touch.clientY - r.top)/r.height - .5;
+    card.style.transform = `rotateY(${x*12}deg) rotateX(${-y*12}deg) scale(1.02)`;
+  },{passive:true});
+  wrap.addEventListener('touchend',()=>{ card.style.transform = ''; card.style.transition = 'transform .5s ease'; });
+}
+
+/* ── Button ripple ── */
+document.querySelectorAll('.btn-liquid').forEach(btn=>{
+  btn.addEventListener('click',function(e){
+    const r = document.createElement('span');
+    const rect = this.getBoundingClientRect();
+    const size = Math.max(rect.width,rect.height)*2;
+    r.style.cssText = `position:absolute;border-radius:50%;width:${size}px;height:${size}px;
+      top:${e.clientY-rect.top-size/2}px;left:${e.clientX-rect.left-size/2}px;
+      background:rgba(255,255,255,0.18);transform:scale(0);animation:ripple .5s ease-out;pointer-events:none`;
+    this.appendChild(r);
+    setTimeout(()=>r.remove(),600);
+  });
+});
+const style = document.createElement('style');
+style.textContent = '@keyframes ripple{to{transform:scale(1);opacity:0}}';
+document.head.appendChild(style);
+
+/* ── Send button ── */
+function sendMsg(btn){
+  btn.textContent='✅ پیام ارسال شد!';
+  btn.style.background='linear-gradient(135deg,rgba(127,255,212,.35),rgba(127,255,212,.2))';
+  setTimeout(()=>{ btn.textContent='📨 ارسال پیام'; btn.style.background=''; },3000);
+}
+
+/* ── Nav active highlight ── */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{ if(window.scrollY >= s.offsetTop-120) cur=s.id; });
+  navLinks.forEach(a=>{
+    a.style.color = a.getAttribute('href')==='#'+cur ? 'var(--accent)' : '';
+    a.style.borderColor = a.getAttribute('href')==='#'+cur ? 'rgba(127,255,212,.3)' : '';
+    a.style.background = a.getAttribute('href')==='#'+cur ? 'rgba(127,255,212,.07)' : '';
+  });
+});
+</script>
+</body>
+</html>
