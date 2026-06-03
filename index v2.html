@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <link rel="icon" type="image/png" href="logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برنامه‌نویس و طراح | آراد عمویی</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0e17;
+            --surface: #1a1829;
+            --pixel-green: #00e676;
+            --pixel-blue: #448aff;
+            --pixel-pink: #ff4081;
+            --pixel-yellow: #ffeb3b;
+            --pixel-white: #e0e0e0;
+            --border-pixel: 4px;
+            --shadow-pixel: 6px 6px 0px #00000080;
+            --font: 'Vazirmatn', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            image-rendering: pixelated;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--pixel-white);
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+            letter-spacing: 0.02em;
+            background-image: radial-gradient(rgba(0, 230, 118, 0.08) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        /* ── PIXELATED BORDERS HELPER ── */
+        .pixel-border {
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0 #000, 8px 8px 0 rgba(0, 0, 0, 0.5);
+            transition: 0.2s;
+            image-rendering: crisp-edges;
+        }
+
+        .wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── CRYSTAL/SCANLINE OVERLAY ── */
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 999;
+            background: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.06) 2px,
+                    rgba(0, 0, 0, 0.06) 4px);
+            opacity: 0.5;
+        }
+
+        /* ─── NAVIGATION ─── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: var(--surface);
+            border-bottom: 4px solid #000;
+            box-shadow: 0 4px 0 #000;
+            padding: 10px 0;
+            image-rendering: pixelated;
+        }
+        nav .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            font-family: var(--font);
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #000;
+            background: var(--pixel-green);
+            padding: 8px 18px;
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0 #000;
+            text-decoration: none;
+            transition: 0.1s;
+            letter-spacing: 0.05em;
+        }
+        .nav-logo:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 #000;
+            background: var(--pixel-yellow);
+        }
+        .nav-links {
+            display: flex;
+            gap: 4px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--pixel-white);
+            padding: 10px 16px;
+            border: 4px solid transparent;
+            background: #000;
+            transition: 0.15s;
+            letter-spacing: 0.04em;
+            image-rendering: pixelated;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--pixel-blue);
+            color: #000;
+            border-color: #fff;
+            box-shadow: 4px 4px 0 #000;
+            transform: translate(-2px, -2px);
+        }
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: #000;
+            border: 3px solid #fff;
+            padding: 6px 8px;
+            box-shadow: 3px 3px 0 #000;
+        }
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 3px;
+            background: var(--pixel-green);
+            transition: 0.2s;
+        }
+
+        /* ─── HERO ─── */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 90px;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            padding: 50px 0;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: #000;
+            color: var(--pixel-green);
+            font-weight: 900;
+            font-size: 0.8rem;
+            padding: 8px 20px;
+            border: 4px solid var(--pixel-green);
+            box-shadow: 4px 4px 0 #000;
+            margin-bottom: 24px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            animation: fadeSlide 0.7s ease both;
+        }
+        .hero-name {
+            font-size: clamp(2.6rem, 5vw, 4rem);
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            animation: fadeSlide 0.8s 0.1s ease both;
+            text-shadow: 4px 4px 0 #000;
+        }
+        .hero-name .line1 {
+            display: block;
+            color: #fff;
+        }
+        .hero-name .line2 {
+            display: block;
+            color: var(--pixel-pink);
+        }
+        .hero-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--pixel-blue);
+            margin-bottom: 24px;
+            animation: fadeSlide 0.8s 0.2s ease both;
+            background: #000;
+            display: inline-block;
+            padding: 4px 12px;
+            border: 2px solid var(--pixel-blue);
+        }
+        .hero-desc {
+            font-size: 0.95rem;
+            line-height: 1.9;
+            color: #ccc;
+            max-width: 450px;
+            margin-bottom: 36px;
+            animation: fadeSlide 0.8s 0.3s ease both;
+        }
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            animation: fadeSlide 0.8s 0.4s ease both;
+        }
+
+        /* ─── PIXEL BUTTON ─── */
+        .btn-pixel {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            font-family: var(--font);
+            font-weight: 900;
+            font-size: 0.9rem;
+            text-decoration: none;
+            cursor: pointer;
+            border: 4px solid #000;
+            background: var(--pixel-green);
+            color: #000;
+            box-shadow: 6px 6px 0 #000;
+            transition: all 0.12s ease;
+            letter-spacing: 0.04em;
+            image-rendering: pixelated;
+        }
+        .btn-pixel:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 10px 10px 0 #000;
+            background: #fff;
+        }
+        .btn-pixel:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #000;
+        }
+        .btn-pixel-secondary {
+            background: var(--pixel-pink);
+            color: #000;
+        }
+        .btn-pixel-secondary:hover {
+            background: #fff;
+        }
+
+        /* ─── AVATAR CARD ─── */
+        .avatar-wrap {
+            perspective: 800px;
+            animation: fadeSlide 0.9s 0.2s ease both;
+        }
+        .avatar-card {
+            width: 100%;
+            max-width: 340px;
+            margin: 0 auto;
+            padding: 28px;
+            background: var(--surface);
+            border: 4px solid #000;
+            box-shadow: 8px 8px 0 #000;
+            text-align: center;
+            transition: transform 0.08s ease;
+            image-rendering: pixelated;
+        }
+        .avatar-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--pixel-green);
+            box-shadow: 6px 6px 0 #000;
+            margin: 0 auto 20px;
+            display: block;
+            image-rendering: auto;
+        }
+        .avatar-name {
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+        }
+        .avatar-role {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--pixel-green);
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            background: #000;
+            display: inline-block;
+            padding: 4px 12px;
+            border: 2px solid var(--pixel-green);
+        }
+        .avatar-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .stat-item {
+            padding: 12px 4px;
+            background: #000;
+            border: 3px solid #fff;
+            box-shadow: 3px 3px 0 #000;
+            transition: 0.15s;
+            color: #fff;
+        }
+        .stat-item:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 #000;
+            background: var(--pixel-blue);
+            border-color: #fff;
+            color: #000;
+        }
+        .stat-num {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--pixel-yellow);
+            text-shadow: 2px 2px 0 #000;
+        }
+        .stat-item:hover .stat-num {
+            color: #000;
+        }
+        .stat-lbl {
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: #aaa;
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        /* ─── SECTIONS ─── */
+        .section {
+            padding: 80px 0;
+        }
+        .section-header {
+            margin-bottom: 48px;
+        }
+        .section-label {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 900;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            background: #000;
+            color: var(--pixel-pink);
+            padding: 6px 16px;
+            border: 3px solid var(--pixel-pink);
+            box-shadow: 4px 4px 0 #000;
+            margin-bottom: 14px;
+        }
+        .section-title {
+            font-size: clamp(1.8rem, 3vw, 2.4rem);
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 3px 3px 0 #000;
+        }
+
+        /* ─── SKILLS ─── */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .skill-block {
+            background: var(--surface);
+            border: 4px solid #000;
+            box-shadow: 6px 6px 0 #000;
+            padding: 24px;
+            transition: 0.2s;
+        }
+        .skill-block:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 10px 10px 0 #000;
+        }
+        .skill-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .skill-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .skill-info {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 800;
+            font-size: 0.8rem;
+        }
+        .skill-name {
+            color: #fff;
+        }
+        .skill-pct {
+            color: var(--pixel-yellow);
+            background: #000;
+            padding: 2px 8px;
+            border: 2px solid var(--pixel-yellow);
+        }
+        .bar-track {
+            height: 18px;
+            background: #000;
+            border: 3px solid #fff;
+            box-shadow: inset 3px 3px 0 rgba(0,0,0,0.6);
+            position: relative;
+            image-rendering: pixelated;
+        }
+        .bar-fill {
+            height: 100%;
+            background: var(--pixel-green);
+            width: 0;
+            transition: width 1.2s steps(20);
+            box-shadow: inset 0 -4px 0 rgba(0,0,0,0.3);
+            image-rendering: pixelated;
+        }
+        .bar-fill.animated {
+            width: var(--w);
+        }
+        .bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0,0,0,0.15) 6px, rgba(0,0,0,0.15) 12px);
+            pointer-events: none;
+        }
+
+        /* ─── PROJECTS ─── */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .project-card {
+            background: var(--surface);
+            border: 4px solid #000;
+            box-shadow: 6px 6px 0 #000;
+            padding: 24px;
+            transition: 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .project-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 10px 10px 0 #000;
+        }
+        .project-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .project-icon {
+            font-size: 2rem;
+        }
+        .project-tag {
+            font-weight: 900;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border: 3px solid #000;
+            box-shadow: 2px 2px 0 #000;
+            background: var(--pixel-yellow);
+            color: #000;
+            letter-spacing: 0.08em;
+        }
+        .project-tag.alt1 {
+            background: var(--pixel-blue);
+            color: #fff;
+        }
+        .project-tag.alt2 {
+            background: var(--pixel-pink);
+            color: #000;
+        }
+        .project-name {
+            font-size: 1.1rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+        }
+        .project-desc {
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: #bbb;
+            margin-bottom: 18px;
+        }
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .tech-chip {
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border: 2px solid #fff;
+            background: #000;
+            color: #fff;
+            transition: 0.2s;
+        }
+        .tech-chip:hover {
+            background: var(--pixel-green);
+            color: #000;
+            border-color: #000;
+            transform: scale(1.05);
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            background: var(--surface);
+            border-top: 4px solid #000;
+            padding: 24px 0;
+            text-align: center;
+            font-weight: 800;
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: 40px;
+            box-shadow: 0 -4px 0 #000;
+            letter-spacing: 0.05em;
+        }
+
+        /* ─── SCROLL TOP ─── */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 200;
+            width: 48px;
+            height: 48px;
+            background: var(--pixel-pink);
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0 #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s, transform 0.2s;
+            color: #000;
+            image-rendering: pixelated;
+        }
+        .scroll-top.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .scroll-top:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 6px 6px 0 #000;
+            background: #fff;
+        }
+
+        /* ─── REVEAL ─── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media(max-width:768px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .avatar-wrap {
+                order: -1;
+            }
+            .nav-links {
+                display: none;
+                position: fixed;
+                inset: 0;
+                top: 64px;
+                background: var(--surface);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 20px;
+                z-index: 99;
+                border-top: 4px solid #000;
+                box-shadow: 0 8px 0 #000;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .nav-links a {
+                font-size: 1.1rem;
+                padding: 12px 20px;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .hero-btns {
+                justify-content: center;
+            }
+            .hero-name,
+            .hero-desc,
+            .hero-badge {
+                text-align: center;
+            }
+            .section-label,
+            .section-title {
+                text-align: center;
+            }
+        }
+        @media(max-width:480px) {
+            .skills-grid,
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-btns {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">آراد عمویی</a>
+            <div class="nav-links" id="navLinks">
+                <a href="#hero">خانه</a>
+                <a href="#skills">مهارت‌ها</a>
+                <a href="#projects">پروژه‌ها</a>
+            </div>
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero">
+        <div class="wrapper">
+            <div class="hero-grid">
+                <div>
+                    <div class="hero-badge">رزومه رسمی</div>
+                    <h1 class="hero-name">
+                        <span class="line1">آراد عمویی</span>
+                        <span class="line2">برنامه‌نویس طراح‌سایت</span>
+                    </h1>
+                    <p class="hero-title">arad mza · mza group · nevrox studio</p>
+                    <p class="hero-desc">
+                        آراد عمویی، برنامه‌نویس و طراح با ۳ سال تجربه در پایتون، فتوشاپ، پریمیر و طراحی وب.
+                    </p>
+                    <div class="hero-btns">
+                        <a href="#projects" class="btn-pixel btn-pixel-secondary">🚀 مشاهده پروژه‌ها</a>
+                    </div>
+                </div>
+                <div class="avatar-wrap" id="avatarWrap">
+                    <div class="avatar-card" id="avatarCard">
+                        <img class="avatar-img" src="profile.jpg" alt="Arad">
+                        <div class="avatar-name">آراد عمویی</div>
+                        <div class="avatar-role">Almost a full stack developer</div>
+                        <div class="avatar-stats">
+                            <div class="stat-item">
+                                <div class="stat-num">3+</div>
+                                <div class="stat-lbl">سال تجربه</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-num">13</div>
+                                <div class="stat-lbl">پروژه</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-num">98٪</div>
+                                <div class="stat-lbl">رضایت</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="section">
+        <div class="wrapper">
+            <div class="section-header reveal">
+                <div class="section-label">تخصص‌ها</div>
+                <h2 class="section-title">مهارت‌های فنی</h2>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-block reveal">
+                    <div class="skill-bars">
+                        <div class="skill-row">
+                            <div class="skill-info"><span class="skill-name">Python</span><span class="skill-pct">85%</span></div>
+                            <div class="bar-track"><div class="bar-fill" style="--w:85%"></div></div>
+                        </div>
+                        <div class="skill-row">
+                            <div class="skill-info"><span class="skill-name">HTML / CSS</span><span class="skill-pct">55%</span></div>
+                            <div class="bar-track"><div class="bar-fill" style="--w:55%"></div></div>
+                        </div>
+                        <div class="skill-row">
+                            <div class="skill-info"><span class="skill-name">TurboWarp / Scratch</span><span class="skill-pct">98%</span></div>
+                            <div class="bar-track"><div class="bar-fill" style="--w:98%"></div></div>
+                        </div>
+                        <div class="skill-row">
+                            <div class="skill-info"><span class="skill-name">Photoshop</span><span class="skill-pct">75%</span></div>
+                            <div class="bar-track"><div class="bar-fill" style="--w:75%"></div></div>
+                        </div>
+                        <div class="skill-row">
+                            <div class="skill-info"><span class="skill-name">Aseprite</span><span class="skill-pct">80%</span></div>
+                            <div class="bar-track"><div class="bar-fill" style="--w:80%"></div></div>
+                        </div>
+                        <div class="skill-row">
+                            <div class="skill-info"><span class="skill-name">Godot Engine</span><span class="skill-pct">60%</span></div>
+                            <div class="bar-track"><div class="bar-fill" style="--w:60%"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="section">
+        <div class="wrapper">
+            <div class="section-header reveal">
+                <div class="section-label">نمونه کار</div>
+                <h2 class="section-title">پروژه‌های برجسته</h2>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card reveal">
+                    <div class="project-top">
+                        <div class="project-icon">🎮</div>
+                        <span class="project-tag">Game Site</span>
+                    </div>
+                    <div class="project-name">سایت استودیو بازی سازی Nevrox</div>
+                    <div class="project-desc">سایت استودیو Nevrox با قابلیت های دولاگ ، تیکت و ...</div>
+                    <div class="project-tech">
+                        <span class="tech-chip">PHP</span>
+                        <span class="tech-chip">Dinate</span>
+                    </div>
+                </div>
+                <div class="project-card reveal">
+                    <div class="project-top">
+                        <div class="project-icon">🤖</div>
+                        <span class="project-tag alt1">AI</span>
+                    </div>
+                    <div class="project-name">دستیار هوش مصنوعی MZA</div>
+                    <div class="project-desc">چت‌بات هوشمند با قابلیت تحلیل اسناد، ترجمه و تولید محتوا برای کسب‌وکارها.</div>
+                    <div class="project-tech">
+                        <span class="tech-chip">FastAPI</span>
+                        <span class="tech-chip">OpenAI API</span>
+                    </div>
+                </div>
+                <div class="project-card reveal">
+                    <div class="project-top">
+                        <div class="project-icon">🏠</div>
+                        <span class="project-tag alt2">IoT</span>
+                    </div>
+                    <div class="project-name">Home IoT</div>
+                    <div class="project-desc">هوشمند سازی ماکت خانه با استفاده از پایتون و برد Arduino و کنترل با صوت و شبکه ی محلی.</div>
+                    <div class="project-tech">
+                        <span class="tech-chip">Arduino UNO</span>
+                        <span class="tech-chip">Python</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="wrapper">
+            <p>ساخته شده با ❤️ توسط آراد عمویی — 2026</p>
+        </div>
+    </footer>
+
+    <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('open');
+        }
+        document.querySelectorAll('.nav-links a').forEach(a => {
+            a.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('open');
+            });
+        });
+
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    entry.target.querySelectorAll('.bar-fill').forEach(bar => bar.classList.add('animated'));
+                }
+            });
+        }, { threshold: 0.15 });
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        const barObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('animated');
+            });
+        }, { threshold: 0.2 });
+        document.querySelectorAll('.bar-fill').forEach(bar => barObserver.observe(bar));
+
+        const scrollTopBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            scrollTopBtn.classList.toggle('show', window.scrollY > 400);
+        });
+
+        // 3D tilt
+        const wrap = document.getElementById('avatarWrap');
+        const card = document.getElementById('avatarCard');
+        if (wrap && card) {
+            wrap.addEventListener('mousemove', (e) => {
+                const rect = wrap.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                card.style.transform = `rotateY(${x*12}deg) rotateX(${-y*12}deg)`;
+            });
+            wrap.addEventListener('mouseleave', () => {
+                card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+                card.style.transition = 'transform 0.4s ease';
+            });
+            wrap.addEventListener('mouseenter', () => {
+                card.style.transition = 'transform 0.1s ease';
+            });
+            wrap.addEventListener('touchmove', (e) => {
+                const touch = e.touches[0];
+                const rect = wrap.getBoundingClientRect();
+                const x = (touch.clientX - rect.left) / rect.width - 0.5;
+                const y = (touch.clientY - rect.top) / rect.height - 0.5;
+                card.style.transform = `rotateY(${x*6}deg) rotateX(${-y*6}deg)`;
+            }, { passive: true });
+            wrap.addEventListener('touchend', () => {
+                card.style.transform = '';
+                card.style.transition = 'transform 0.4s ease';
+            });
+        }
+
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
