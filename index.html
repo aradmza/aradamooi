@@ -77,7 +77,7 @@
         "@type": "FAQPage",
         "mainEntity": [
             { "@type": "Question", "name": "آراد عمویی کیست؟", "acceptedAnswer": { "@type": "Answer", "text": "آراد عمویی (Arad Amooi)، برنامه‌نویس پایتون و توسعه‌دهنده وب با بیش از ۳ سال تجربه. بنیانگذار MZA Group و Sag GPT." } },
-            { "@type": "Question", "name": "MZA Group چیست؟", "acceptedAnswer": { "@type": "Answer", "text": "MZA Group گروه فناوری تأسیس‌شده توسط آراد عمویی است که در حوزه هوش مصنوعی، توسعه چت‌بات و نرم‌افزارهای هوشمند کسب‌وکار فعالیت می‌کند." } },
+            { "@type": "Question", "name": "MZA Group چیست؟", "acceptedAnswer": { "@type": "Answer", "text": "MZA Group شرکت/گروه فناوری آراد عمویی است که در حوزه هوش مصنوعی، توسعه نرم‌افزار و راه‌حل‌های هوشمند کسب‌وکار فعالیت می‌کند." } },
             { "@type": "Question", "name": "arad mza کیست؟", "acceptedAnswer": { "@type": "Answer", "text": "arad mza نام کاربری و برند دیجیتال آراد عمویی (Arad Amooi) در فضای آنلاین است." } },
             { "@type": "Question", "name": "چطور با آراد عمویی تماس بگیرم؟", "acceptedAnswer": { "@type": "Answer", "text": "از طریق ایمیل aradamooi606691@gmail.com یا شبکه‌های اجتماعی GitHub، Instagram، LinkedIn و Twitter می‌توانید با آراد عمویی ارتباط برقرار کنید." } },
             { "@type": "Question", "name": "آراد عمویی در چه حوزه‌هایی تخصص دارد؟", "acceptedAnswer": { "@type": "Answer", "text": "Python، FastAPI، توسعه وب (HTML/CSS/JS/PHP)، هوش مصنوعی، بازی‌سازی با Godot Engine، طراحی گرافیک با Photoshop، و IoT با Arduino." } },
@@ -96,6 +96,67 @@
             font-style: normal;
             font-display: swap;
         }
+
+        /* ─── CERTIFICATES TICKER ──────────────────────── */
+        #certificates { overflow: hidden; }
+
+        .cert-viewport {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            /* JS sets track height; give viewport enough room */
+            padding: 10px 0;
+            min-height: 200px;
+            mask-image: linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%);
+            -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%);
+        }
+
+        .cert-track {
+            position: relative;
+        }
+
+        .cert-card {
+            border-radius: 14px;
+            overflow: hidden;
+            border: 2px solid var(--surface-border);
+            /* no transition on transform — JS moves it every frame */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            position: absolute;
+            background: #111;
+        }
+        .cert-card.hovered {
+            border-color: var(--accent1);
+            box-shadow: 0 0 0 1px var(--accent1), 0 12px 40px var(--accent1-glow);
+        }
+        .cert-card:hover {
+            border-color: var(--accent1);
+            box-shadow: 0 0 0 1px var(--accent1), 0 12px 40px var(--accent1-glow);
+            transform: scale(1.04) translateY(-4px);
+            z-index: 2;
+        }
+        .cert-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        .cert-card:hover img { transform: scale(1.05); }
+        .cert-card::after {
+            content: ''; position: absolute; inset: 0; border-radius: 12px;
+            background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(6,182,212,0.07));
+            opacity: 0; transition: opacity 0.3s; pointer-events: none;
+        }
+        .cert-card:hover::after { opacity: 1; }
+        .cert-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 3px; z-index: 3; border-radius: 12px 12px 0 0;
+            background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .cert-card:hover::before { opacity: 1; }
+
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&family=Oxanium:wght@400;700;900&display=swap" rel="stylesheet">
 
@@ -218,14 +279,14 @@
         }
 
         .nav-logo {
-            font-family: var(--font-en); font-size: 1.05rem; font-weight: 900;
-            color: var(--bg); background: linear-gradient(135deg, var(--accent1), var(--accent2));
-            padding: 7px 22px; border-radius: 9999px; text-decoration: none;
-            box-shadow: 0 0 22px var(--accent1-glow);
-            transition: all 0.3s ease; flex-shrink: 0;
-            letter-spacing: 0.04em;
+            width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; background: linear-gradient(135deg, var(--accent1), var(--accent2));
+            text-decoration: none;
+            box-shadow: 0 0 20px var(--accent1-glow);
+            transition: all 0.3s ease;
         }
-        .nav-logo:hover { transform: scale(1.04); box-shadow: 0 0 30px var(--accent1-glow), 0 0 60px var(--accent2-glow); }
+        .nav-logo:hover { transform: scale(1.1) rotate(10deg); box-shadow: 0 0 32px var(--accent1-glow), 0 0 60px var(--accent2-glow); }
 
         .nav-links { display: flex; gap: 4px; align-items: center; }
         .nav-links a {
@@ -242,14 +303,14 @@
 
         /* Language toggle */
         .lang-btn {
-            display: inline-flex; align-items: center; gap: 6px;
-            font-size: 0.78rem; font-weight: 900; letter-spacing: 0.08em;
-            padding: 7px 14px; border-radius: 9999px; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 0.73rem; font-weight: 900; letter-spacing: 0.06em;
+            padding: 6px 12px; border-radius: 9999px; cursor: pointer;
             background: var(--surface); border: 1px solid var(--surface-border);
-            color: var(--accent2); transition: all 0.25s ease;
+            color: var(--accent2); transition: all 0.25s ease; font-family: var(--font-en);
         }
         .lang-btn:hover { background: var(--accent2-glow); border-color: var(--accent2); color: #fff; }
-        .lang-btn .lang-flag { font-size: 1rem; }
+        .lang-btn svg { flex-shrink: 0; }
 
         /* Theme btn */
         .theme-btn {
@@ -264,7 +325,10 @@
 
         /* Hamburger */
         .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: transparent; border: none; padding: 8px; }
-        .hamburger span { display: block; width: 24px; height: 2px; background: var(--accent1); border-radius: 2px; transition: 0.3s; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--accent1); border-radius: 2px; transition: 0.3s; }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
         /* ─── HERO ─────────────────────────────────── */
         #hero {
@@ -275,15 +339,14 @@
 
         /* Rotating conic gradient ring behind avatar */
         .hero-ring {
-            position: absolute; top: 50%; right: 5%;
+            position: absolute; top: 50%; right: 3%;
             transform: translateY(-50%);
-            width: 420px; height: 420px; border-radius: 50%;
-            background: conic-gradient(from 0deg, var(--accent1), var(--accent2), var(--accent3), var(--accent4), var(--accent1));
-            filter: blur(60px); opacity: 0.12;
-            animation: spin 18s linear infinite;
+            width: 380px; height: 380px; border-radius: 50%;
+            background: radial-gradient(circle, var(--accent1) 0%, var(--accent2) 50%, transparent 70%);
+            filter: blur(80px); opacity: 0.1;
             pointer-events: none; z-index: 0;
         }
-        @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .hero-grid {
             display: grid; grid-template-columns: 1fr 420px;
@@ -307,6 +370,7 @@
             line-height: 1.05; margin-bottom: 24px; animation: fadeUp 0.75s 0.08s ease both;
         }
         .hero-name .line1 { display: block; color: var(--text-main); }
+        .hero-name .t-en.line1, .hero-name .t-fa.line1 { display: block; }
         .hero-name .line2 {
             display: block;
             background: linear-gradient(100deg, var(--accent1) 0%, var(--accent2) 50%, var(--accent3) 100%);
@@ -391,10 +455,11 @@
             position: relative; width: 120px; margin: 0 auto 20px;
         }
         .avatar-img-wrap::before {
-            content: ''; position: absolute; inset: -5px; border-radius: 50%;
-            background: conic-gradient(from 0deg, var(--accent1), var(--accent2), var(--accent3), var(--accent1));
-            animation: spin 4s linear infinite;
+            content: ''; position: absolute; inset: -4px; border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--accent1), var(--accent2), var(--accent3), var(--accent4), var(--accent1));
+            animation: avatarSpin 5s linear infinite;
         }
+        @keyframes avatarSpin { to { transform: rotate(360deg); } }
         .avatar-img {
             width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
             border: 4px solid var(--bg); display: block; position: relative; z-index: 1;
@@ -437,10 +502,10 @@
             position: relative; display: inline-block;
         }
         .section-title::after {
-            content: ''; position: absolute; bottom: -10px; right: 50%; left: 50%;
+            content: ''; position: absolute; bottom: -10px; left: 50%;
             transform: translateX(-50%); width: 60px; height: 3px;
             background: linear-gradient(90deg, var(--accent1), var(--accent2));
-            border-radius: 9999px; left: 50%; transform: translateX(-50%);
+            border-radius: 9999px;
         }
 
         /* Divider line between sections */
@@ -652,8 +717,8 @@
         [data-lang="en"] .faq-question, [data-lang="en"] .faq-answer { font-family: var(--font-en); }
 
         .t-fa, .t-en { transition: opacity 0.2s ease; }
-        [data-lang="en"] .t-fa { display: none; }
-        [data-lang="fa"] .t-en { display: none; }
+        [data-lang="en"] .t-fa { display: none !important; }
+        [data-lang="fa"] .t-en { display: none !important; }
 
         /* ─── RESPONSIVE ───────────────────────────── */
         @media(max-width: 1024px) {
@@ -691,6 +756,96 @@
             .contact-grid { grid-template-columns: repeat(2, 1fr); }
             .nav-inner { padding: 8px 16px; }
         }
+
+        /* ─── CERTIFICATES TICKER ──────────────────────── */
+        #certificates { overflow: hidden; }
+
+        .cert-track-wrap {
+            position: relative;
+            overflow: hidden;
+            padding: 20px 0;
+            mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+            -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+        }
+
+        .cert-track {
+            display: flex;
+            gap: 22px;
+            width: max-content;
+            animation: certScroll 38s linear infinite;
+        }
+        .cert-track:hover { animation-play-state: paused; }
+
+        /* second row scrolls opposite */
+        .cert-track.reverse {
+            animation: certScrollReverse 42s linear infinite;
+            margin-top: 22px;
+        }
+        .cert-track.reverse:hover { animation-play-state: paused; }
+            100% { transform: translateX(-50%); }
+        }
+            100% { transform: translateX(0); }
+        }
+
+        .cert-card {
+            flex-shrink: 0;
+            width: 280px;
+            background: var(--surface);
+            border: 1px solid var(--surface-border);
+            border-radius: 20px;
+            padding: 22px 20px;
+            transition: all 0.35s ease;
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+        .cert-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
+            border-radius: 20px 20px 0 0;
+        }
+        .cert-card:hover {
+            border-color: var(--accent1);
+            box-shadow: 0 20px 50px var(--accent1-glow);
+            transform: translateY(-6px) scale(1.02);
+        }
+        .cert-badge {
+            width: 46px; height: 46px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 14px; font-size: 1.5rem;
+            background: var(--accent1-glow);
+            border: 1px solid rgba(124,58,237,0.3);
+        }
+        .cert-issuer {
+            font-size: 0.68rem; font-weight: 900; letter-spacing: 0.12em;
+            text-transform: uppercase; color: var(--accent2);
+            margin-bottom: 8px; font-family: var(--font-en);
+        }
+        .cert-name {
+            font-size: 0.92rem; font-weight: 900; color: var(--text-main);
+            line-height: 1.4; margin-bottom: 10px;
+        }
+        .cert-meta {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 6px;
+        }
+        .cert-date {
+            font-size: 0.7rem; font-weight: 800; color: var(--text-muted);
+            font-family: var(--font-en);
+        }
+        .cert-tag {
+            font-size: 0.65rem; font-weight: 900; padding: 3px 10px;
+            border-radius: 9999px; background: var(--accent3-glow);
+            border: 1px solid rgba(245,158,11,0.3); color: var(--accent3);
+            letter-spacing: 0.04em;
+        }
+
+        /* Floating glow dots decoration */
+        .cert-section-deco {
+            position: absolute; pointer-events: none; z-index: 0;
+        }
+
     </style>
 </head>
 <body>
@@ -702,44 +857,45 @@
     <!-- NAVIGATION -->
     <nav aria-label="ناوبری اصلی">
         <div class="nav-inner">
-            <a href="#hero" class="nav-logo" title="Arad Amooi">AM</a>
+            <!-- Logo: icon only, no text -->
+            <a href="#hero" class="nav-logo" title="Arad Amooi" aria-label="Arad Amooi - Home">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+            </a>
 
+            <!-- Nav links: single set, data-key driven -->
             <div class="nav-links" id="navLinks" role="navigation">
-                <a href="#hero" class="t-fa">خانه</a>
-                <a href="#hero" class="t-en">Home</a>
-                <a href="#skills" class="t-fa">مهارت‌ها</a>
-                <a href="#skills" class="t-en">Skills</a>
-                <a href="#experience" class="t-fa">تجربیات</a>
-                <a href="#experience" class="t-en">Experience</a>
-                <a href="#projects" class="t-fa">پروژه‌ها</a>
-                <a href="#projects" class="t-en">Projects</a>
-                <a href="#about" class="t-fa">درباره من</a>
-                <a href="#about" class="t-en">About</a>
-                <a href="#contact" class="t-fa">تماس</a>
-                <a href="#contact" class="t-en">Contact</a>
+                <a href="#hero"       data-fa="خانه"      data-en="Home">خانه</a>
+                <a href="#skills"     data-fa="مهارت‌ها"  data-en="Skills">مهارت‌ها</a>
+                <a href="#experience" data-fa="تجربیات"   data-en="Experience">تجربیات</a>
+                <a href="#projects"   data-fa="پروژه‌ها"  data-en="Projects">پروژه‌ها</a>
+                <a href="#about"      data-fa="درباره من" data-en="About">درباره من</a>
+                <a href="#certificates" data-fa="مدارک" data-en="Certs">مدارک</a>
+                <a href="#contact"    data-fa="تماس"      data-en="Contact">تماس</a>
             </div>
 
             <div class="nav-controls">
-                <!-- Language switcher -->
-                <button class="lang-btn" id="langBtn" aria-label="Switch language">
-                    <span class="lang-flag t-fa">🇬🇧</span>
-                    <span class="t-fa">EN</span>
-                    <span class="lang-flag t-en">🇮🇷</span>
-                    <span class="t-en">FA</span>
+                <!-- Language switcher: icon only -->
+                <button class="lang-btn" id="langBtn" aria-label="Switch language" title="تغییر زبان / Switch Language">
+                    <!-- shows globe icon + current target lang label -->
+                    <svg id="langIcon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                    <span id="langLabel" style="font-size:0.75rem;font-weight:900;letter-spacing:0.06em;">EN</span>
                 </button>
 
                 <!-- Theme switcher -->
-                <button id="themeSwitcher" class="theme-btn" aria-label="تغییر تم رنگی">
+                <button id="themeSwitcher" class="theme-btn" aria-label="تغییر تم رنگی" title="تغییر تم رنگی">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="13" r="2.5"/>
-                        <circle cx="13" cy="19.5" r="2.5"/><circle cx="6.5" cy="15" r="2.5"/>
-                        <circle cx="5" cy="7.5" r="2.5"/>
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
                     </svg>
                 </button>
 
-                <div class="hamburger" id="hamburger" role="button" tabindex="0" aria-label="منو" aria-expanded="false">
+                <button class="hamburger" id="hamburger" aria-label="منو" aria-expanded="false">
                     <span></span><span></span><span></span>
-                </div>
+                </button>
             </div>
         </div>
     </nav>
@@ -757,7 +913,7 @@
                         <span class="t-en">Official Portfolio · 2026</span>
                     </div>
                     <h1 class="hero-name">
-                        <span class="line1">آراد عمویی<span class="t-en" style="display:none"> / Arad Amooi</span></span>
+                        <span class="line1 t-fa">آراد عمویی</span><span class="line1 t-en">Arad Amooi</span>
                         <span class="line2 t-fa">برنامه‌نویس و توسعه‌دهنده وب</span>
                         <span class="line2 t-en">Python Dev & Web Developer</span>
                     </h1>
@@ -917,8 +1073,8 @@
                         <span class="t-en">Founder & CEO</span>
                     </h3>
                     <p class="experience-company">MZA Group — AI & Technology Group</p>
-                    <p class="experience-desc t-fa">مدیریت و رهبری تیم برای ساخت محصولات مبتنی بر هوش مصنوعی. طراحی معماری چت‌بات‌های هوشمند، تحلیل اسناد و تولید محتوای خودکار با FastAPI و OpenAI API.</p>
-                    <p class="experience-desc t-en">Leading development of AI-powered products. Architecting intelligent chatbot systems, document analysis tools, and automated content generation using FastAPI and OpenAI API.</p>
+                    <p class="experience-desc t-fa">مدیریت و رهبری MZA Group، گروه/شرکت فناوری تخصصی در حوزه هوش مصنوعی. طراحی معماری چت‌بات‌های هوشمند، تحلیل اسناد و تولید محتوای خودکار با FastAPI.</p>
+                    <p class="experience-desc t-en">Leading MZA Group, a specialized AI technology company. Architecting intelligent chatbot systems, document analysis tools, and automated content generation using FastAPI.</p>
                 </div>
                 <div class="experience-item">
                     <span class="experience-date"><time datetime="2023/2025">2023 – 2025</time></span>
@@ -927,8 +1083,8 @@
                         <span class="t-en">Python & Web Developer</span>
                     </h3>
                     <p class="experience-company">Sag GPT — Game Studio & Software</p>
-                    <p class="experience-desc t-fa">توسعه وب‌سایت رسمی با PHP. طراحی سیستم تیکت پشتیبانی، مدیریت کاربران و مشارکت مستقیم در توسعه بازی‌ها با Godot Engine.</p>
-                    <p class="experience-desc t-en">Developed the official studio website using PHP. Built ticket support system, user management, and participated in game development with Godot Engine.</p>
+                    <p class="experience-desc t-fa">توسعه Sag GPT، هوش مصنوعی خودساخته با قابلیت‌های پیشرفته چت و تحلیل. طراحی سیستم تیکت پشتیبانی، مدیریت کاربران و مشارکت در توسعه بازی با Godot Engine.</p>
+                    <p class="experience-desc t-en">Developed Sag GPT, a self-built AI assistant with advanced chat and analysis capabilities. Built ticket support system, user management, and participated in game development with Godot Engine.</p>
                 </div>
                 <div class="experience-item">
                     <span class="experience-date"><time datetime="2022/2023">2022 – 2023</time></span>
@@ -1065,7 +1221,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                     </div>
                     <div style="font-weight:900;font-size:1rem;color:var(--text-main);margin-bottom:8px;"><span class="t-fa">بنیانگذار Sag GPT</span><span class="t-en">Founder, Sag GPT</span></div>
-                    <div style="font-size:0.82rem;color:var(--accent2);line-height:1.6;"><span class="t-fa">استودیو بازی‌سازی</span><span class="t-en">Game Development Studio</span></div>
+                    <div style="font-size:0.82rem;color:var(--accent2);line-height:1.6;"><span class="t-fa">هوش مصنوعی خودساخته</span><span class="t-en">Self-Built AI System</span></div>
                 </div>
                 <div style="background: var(--surface); border: 1px solid var(--surface-border); border-radius: var(--radius); padding: 28px 22px; text-align: center; transition: all 0.35s ease;">
                     <div style="width:52px;height:52px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:var(--accent3-glow);border:1px solid rgba(245,158,11,0.3);color:var(--accent3);">
@@ -1127,8 +1283,8 @@
                         <span class="faq-icon">+</span>
                     </button>
                     <div class="faq-answer">
-                        <p class="t-fa">MZA Group گروه فناوری تأسیس‌شده توسط آراد عمویی است که در حوزه هوش مصنوعی، توسعه چت‌بات و نرم‌افزارهای هوشمند کسب‌وکار فعالیت می‌کند.</p>
-                        <p class="t-en">MZA Group is a technology group founded by Arad Amooi, operating in AI, chatbot development, and intelligent business software.</p>
+                        <p class="t-fa">MZA Group شرکت/گروه فناوری آراد عمویی است که در حوزه هوش مصنوعی، توسعه نرم‌افزار و راه‌حل‌های هوشمند کسب‌وکار فعالیت می‌کند.</p>
+                        <p class="t-en">MZA Group is Arad Amooi's technology company, specializing in AI development, software solutions, and intelligent business tools.</p>
                     </div>
                 </div>
 
@@ -1175,8 +1331,8 @@
                         <span class="faq-icon">+</span>
                     </button>
                     <div class="faq-answer">
-                        <p class="t-fa">Sag GPT استودیو بازی‌سازی و نرم‌افزار تأسیس‌شده توسط آراد عمویی است که تجربه‌های دیجیتال خلاقانه و بازی‌های هوشمند می‌سازد.</p>
-                        <p class="t-en">Sag GPT is a game development and software studio founded by Arad Amooi, focused on building creative digital experiences and intelligent games.</p>
+                        <p class="t-fa">Sag GPT هوش مصنوعی خودساخته آراد عمویی است — یک سیستم چت‌بات پیشرفته با قابلیت‌های تحلیل، ترجمه و تولید محتوا.</p>
+                        <p class="t-en">Sag GPT is Arad Amooi's self-built AI system — an advanced chatbot platform with analysis, translation, and content generation capabilities.</p>
                     </div>
                 </div>
 
@@ -1232,12 +1388,12 @@
                     <div class="contact-label">Instagram</div>
                     <div class="contact-value">arad_mza</div>
                 </a>
-                <a href="https://linkedin.com/in/aradamooi" target="_blank" rel="noopener noreferrer" class="contact-card">
+                <a href="https://www.aparat.com/arad_mza" target="_blank" rel="noopener noreferrer" class="contact-card">
                     <div class="contact-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
                     </div>
-                    <div class="contact-label">LinkedIn</div>
-                    <div class="contact-value">aradamooi</div>
+                    <div class="contact-label">آپارات</div>
+                    <div class="contact-value">arad_mza</div>
                 </a>
                 <a href="https://twitter.com/aradamooi" target="_blank" rel="noopener noreferrer" class="contact-card">
                     <div class="contact-icon">
@@ -1251,6 +1407,46 @@
     </section>
 
     </main>
+
+
+    <div class="section-divider"></div>
+
+    <!-- CERTIFICATES -->
+    <section id="certificates" class="section" aria-labelledby="cert-heading" style="position:relative;overflow:hidden;">
+
+        <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:var(--accent4);filter:blur(130px);opacity:0.05;top:-80px;left:5%;pointer-events:none;"></div>
+        <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:var(--accent2);filter:blur(110px);opacity:0.05;bottom:-60px;right:10%;pointer-events:none;"></div>
+
+        <div class="wrapper">
+            <div class="section-header reveal">
+                <span class="section-label t-fa">گواهینامه‌ها</span>
+                <span class="section-label t-en">Certificates</span>
+                <h2 class="section-title" id="cert-heading">
+                    <span class="t-fa">مدارک و دوره‌های تخصصی</span>
+                    <span class="t-en">Certifications &amp; Courses</span>
+                </h2>
+                <p style="color:var(--text-muted);font-size:0.84rem;margin-top:12px;" class="t-fa">هاور کنید تا متوقف شود</p>
+                <p style="color:var(--text-muted);font-size:0.84rem;margin-top:12px;" class="t-en">Hover to pause</p>
+            </div>
+        </div>
+
+        <!-- single row ticker -->
+        <div class="cert-viewport" id="certViewport">
+            <div class="cert-track" id="certTrack">
+                <div class="cert-card"><img src="madrak1.jpg"  alt="مدرک ۱"  loading="lazy"></div>
+                <div class="cert-card"><img src="madrak2.jpg"  alt="مدرک ۲"  loading="lazy"></div>
+                <div class="cert-card"><img src="madrak3.jpg"  alt="مدرک ۳"  loading="lazy"></div>
+                <div class="cert-card"><img src="madrak4.jpg"  alt="مدرک ۴"  loading="lazy"></div>
+                <div class="cert-card"><img src="madrak5.jpg"  alt="مدرک ۵"  loading="lazy"></div>
+                <div class="cert-card"><img src="madrak6.jpg"  alt="مدرک ۶"  loading="lazy"></div>
+                <div class="cert-card"><img src="madrak7.jpg"  alt="مدرک ۷"  loading="lazy"></div>
+                <div class="cert-card"><img src="madrak8.jpg"  alt="مدرک ۸"  loading="lazy"></div>
+                <div class="cert-card"><img src="madrak9.jpg"  alt="مدرک ۹"  loading="lazy"></div>
+                <div class="cert-card"><img src="madrak10.jpg" alt="مدرک ۱۰" loading="lazy"></div>
+            </div>
+        </div>
+
+    </section>
 
     <!-- FOOTER -->
     <footer>
@@ -1267,124 +1463,249 @@
 
     <script>
     (function() {
+
         // ── LANGUAGE SWITCH ──────────────────────────────
         const html = document.documentElement;
-        const langBtn = document.getElementById('langBtn');
+        const langBtn   = document.getElementById('langBtn');
+        const langLabel = document.getElementById('langLabel');
         let lang = localStorage.getItem('siteLang') || 'fa';
 
         function applyLang(l) {
             lang = l;
-            html.setAttribute('lang', l === 'fa' ? 'fa' : 'en');
-            html.setAttribute('dir', l === 'fa' ? 'rtl' : 'ltr');
+            html.setAttribute('lang',      l === 'fa' ? 'fa' : 'en');
+            html.setAttribute('dir',       l === 'fa' ? 'rtl' : 'ltr');
             html.setAttribute('data-lang', l);
             localStorage.setItem('siteLang', l);
+            if (langLabel) langLabel.textContent = l === 'fa' ? 'EN' : 'FA';
+            document.querySelectorAll('.nav-links a[data-fa]').forEach(a => {
+                a.textContent = l === 'fa' ? a.dataset.fa : a.dataset.en;
+            });
         }
         applyLang(lang);
-
-        langBtn.addEventListener('click', () => {
-            applyLang(lang === 'fa' ? 'en' : 'fa');
-        });
+        if (langBtn) langBtn.addEventListener('click', () => applyLang(lang === 'fa' ? 'en' : 'fa'));
 
         // ── THEME SWITCH ──────────────────────────────────
         const themes = ['', 'aurora', 'crimson', 'matrix'];
-        let themeIdx = themes.indexOf(localStorage.getItem('siteTheme') || '');
-        if (themeIdx === -1) themeIdx = 0;
-
+        let themeIdx = Math.max(0, themes.indexOf(localStorage.getItem('siteTheme') || ''));
         function applyTheme(i) {
-            const t = themes[i];
-            html.setAttribute('data-theme', t);
-            localStorage.setItem('siteTheme', t);
+            html.setAttribute('data-theme', themes[i]);
+            localStorage.setItem('siteTheme', themes[i]);
         }
         applyTheme(themeIdx);
-
-        document.getElementById('themeSwitcher').addEventListener('click', () => {
-            themeIdx = (themeIdx + 1) % themes.length;
-            applyTheme(themeIdx);
-        });
+        const themeBtn = document.getElementById('themeSwitcher');
+        if (themeBtn) themeBtn.addEventListener('click', () => { themeIdx = (themeIdx + 1) % themes.length; applyTheme(themeIdx); });
 
         // ── HAMBURGER ─────────────────────────────────────
         const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
+        const navLinks  = document.getElementById('navLinks');
+        function closeMenu() { navLinks.classList.remove('open'); hamburger.classList.remove('open'); hamburger.setAttribute('aria-expanded','false'); }
+        function openMenu()  { navLinks.classList.add('open');    hamburger.classList.add('open');    hamburger.setAttribute('aria-expanded','true');  }
+        if (hamburger) hamburger.addEventListener('click', () => navLinks.classList.contains('open') ? closeMenu() : openMenu());
+        if (navLinks)  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 
-        function toggleMenu() {
-            navLinks.classList.toggle('open');
-            hamburger.setAttribute('aria-expanded', navLinks.classList.contains('open'));
-        }
-        hamburger.addEventListener('click', toggleMenu);
-        hamburger.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMenu(); } });
-        navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-            navLinks.classList.remove('open');
-            hamburger.setAttribute('aria-expanded', 'false');
-        }));
+        // ── SMOOTH SCROLL ─────────────────────────────────
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const target = document.querySelector(a.getAttribute('href'));
+                if (!target) return;
+                e.preventDefault();
+                window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 88, behavior: 'smooth' });
+            });
+        });
 
-        // ── SCROLL TOP ────────────────────────────────────
+        // ── SCROLL TOP BUTTON ─────────────────────────────
         const scrollBtn = document.getElementById('scrollTopBtn');
-        window.addEventListener('scroll', () => {
-            scrollBtn.classList.toggle('show', window.scrollY > 500);
-        }, { passive: true });
-        scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        if (scrollBtn) {
+            window.addEventListener('scroll', () => scrollBtn.classList.toggle('show', window.scrollY > 500), { passive: true });
+            scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        }
 
         // ── REVEAL ON SCROLL ──────────────────────────────
         const revealObs = new IntersectionObserver(entries => {
             entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
-        }, { threshold: 0.12 });
+        }, { threshold: 0.08 });
         document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
         // ── SKILL BARS ────────────────────────────────────
         const skillSection = document.getElementById('skills');
-        const skillObs = new IntersectionObserver(entries => {
-            entries.forEach(e => {
-                if (e.isIntersecting) {
-                    document.querySelectorAll('.bar-fill').forEach(b => b.classList.add('animated'));
-                    skillObs.unobserve(e.target);
-                }
-            });
-        }, { threshold: 0.25 });
-        if (skillSection) skillObs.observe(skillSection);
+        if (skillSection) {
+            const skillObs = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        document.querySelectorAll('.bar-fill').forEach(b => b.classList.add('animated'));
+                        skillObs.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+            skillObs.observe(skillSection);
+        }
 
-        // ── ACTIVE NAV LINK ───────────────────────────────
+        // ── ACTIVE NAV HIGHLIGHT ──────────────────────────
         const sections = document.querySelectorAll('section[id]');
-        const navAs = document.querySelectorAll('.nav-links a');
+        const navAs    = document.querySelectorAll('.nav-links a');
         const activeObs = new IntersectionObserver(entries => {
             entries.forEach(e => {
-                if (e.isIntersecting) {
-                    navAs.forEach(a => {
-                        a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
-                    });
-                }
+                if (e.isIntersecting)
+                    navAs.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
             });
-        }, { threshold: 0.4 });
+        }, { threshold: 0.3, rootMargin: '-80px 0px 0px 0px' });
         sections.forEach(s => activeObs.observe(s));
 
-        // ── AVATAR TILT ───────────────────────────────────
-        const avatarWrap = document.getElementById('avatarWrap');
-        const avatarCard = document.getElementById('avatarCard');
-        if (avatarWrap && avatarCard) {
-            avatarWrap.addEventListener('mousemove', e => {
-                const r = avatarWrap.getBoundingClientRect();
-                const rx = (e.clientY - r.top - r.height/2) / 14;
-                const ry = (r.width/2 - (e.clientX - r.left)) / 14;
-                avatarCard.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-                avatarCard.style.transition = 'transform 0.1s ease';
-            });
-            avatarWrap.addEventListener('mouseleave', () => {
-                avatarCard.style.transform = 'rotateX(0) rotateY(0)';
-                avatarCard.style.transition = 'transform 0.6s ease';
-            });
+        // ── AVATAR 3D TILT ────────────────────────────────
+        if (window.matchMedia('(pointer: fine)').matches) {
+            const avatarWrap = document.getElementById('avatarWrap');
+            const avatarCard = document.getElementById('avatarCard');
+            if (avatarWrap && avatarCard) {
+                avatarWrap.addEventListener('mousemove', e => {
+                    const r  = avatarWrap.getBoundingClientRect();
+                    const rx = ((e.clientY - r.top)  / r.height - 0.5) * 14;
+                    const ry = (0.5 - (e.clientX - r.left) / r.width) * 14;
+                    avatarCard.style.transform  = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+                    avatarCard.style.transition = 'transform 0.08s ease';
+                });
+                avatarWrap.addEventListener('mouseleave', () => {
+                    avatarCard.style.transform  = 'perspective(900px) rotateX(0deg) rotateY(0deg)';
+                    avatarCard.style.transition = 'transform 0.7s ease';
+                });
+            }
         }
 
         // ── FAQ ACCORDION ─────────────────────────────────
         document.querySelectorAll('.faq-question').forEach(btn => {
             btn.addEventListener('click', () => {
-                const item = btn.parentElement;
+                const item   = btn.closest('.faq-item');
                 const isOpen = item.classList.contains('open');
-                document.querySelectorAll('.faq-item').forEach(i => {
+                document.querySelectorAll('.faq-item.open').forEach(i => {
                     i.classList.remove('open');
-                    i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                    i.querySelector('.faq-question').setAttribute('aria-expanded','false');
                 });
-                if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+                if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
             });
         });
+
+        // ── CERTIFICATE INFINITE TICKER ───────────────────
+        function initTicker(viewport, track, speed) {
+            if (!viewport || !track) return;
+
+            const GAP = 16;
+            let paused = false;
+            let raf;
+            let items = []; // [{el, x}]
+            let W, H;       // card width, height
+
+            function cardSize() {
+                const vw = viewport.offsetWidth;
+                if (vw < 480) return [190, 128];
+                if (vw < 768) return [220, 148];
+                return [270, 180];
+            }
+
+            function setup() {
+                cancelAnimationFrame(raf);
+
+                // Remove old clones
+                track.querySelectorAll('[data-c]').forEach(n => n.remove());
+
+                [W, H] = cardSize();
+                const unit = W + GAP;
+
+                // Original cards
+                const origs = Array.from(track.children);
+                const n = origs.length;
+
+                // Clone enough to fill 3× viewport width
+                const copies = Math.ceil((viewport.offsetWidth * 3) / (n * unit)) + 1;
+                for (let i = 0; i < copies; i++) {
+                    origs.forEach(o => {
+                        const cl = o.cloneNode(true);
+                        cl.dataset.c = '1';
+                        cl.setAttribute('aria-hidden', 'true');
+                        track.appendChild(cl);
+                    });
+                }
+
+                // All cards including clones
+                const all = Array.from(track.children);
+
+                // Track becomes a positioned container
+                track.style.cssText = `
+                    position: relative;
+                    display: block;
+                    width: 100%;
+                    height: ${H}px;
+                    overflow: visible;
+                `;
+
+                // Place cards absolutely side by side starting from x=0
+                items = all.map((el, i) => {
+                    const x = i * unit;
+                    el.style.cssText = `
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: ${W}px;
+                        height: ${H}px;
+                        transform: translateX(${x}px);
+                        will-change: transform;
+                    `;
+                    return { el, x };
+                });
+
+                raf = requestAnimationFrame(tick);
+            }
+
+            function tick() {
+                if (!paused) {
+                    // First pass: move all cards left
+                    items.forEach(c => { c.x -= speed; });
+
+                    // Second pass: find rightmost x AFTER movement
+                    let maxX = -Infinity;
+                    items.forEach(c => { if (c.x > maxX) maxX = c.x; });
+
+                    // Third pass: teleport any card that went off LEFT edge
+                    items.forEach(c => {
+                        if (c.x + W < 0) {
+                            // Place just after the current rightmost card
+                            maxX += (W + GAP);
+                            c.x   = maxX;
+                        }
+                        c.el.style.transform = `translateX(${c.x}px)`;
+                    });
+                }
+                raf = requestAnimationFrame(tick);
+            }
+
+            viewport.addEventListener('mouseenter', () => { paused = true; });
+            viewport.addEventListener('mouseleave', () => { paused = false; });
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) cancelAnimationFrame(raf);
+                else raf = requestAnimationFrame(tick);
+            });
+
+            let rt;
+            window.addEventListener('resize', () => {
+                clearTimeout(rt);
+                rt = setTimeout(setup, 200);
+            });
+
+            setup();
+        }
+
+        function startTickers() {
+            initTicker(
+                document.getElementById('certViewport'),
+                document.getElementById('certTrack'),
+                0.55
+            );
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startTickers);
+        } else {
+            startTickers();
+        }
 
     })();
     </script>
