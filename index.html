@@ -228,40 +228,55 @@
             padding: 0;
         }
         .nav-inner {
-            max-width: 1140px; margin: 16px auto 0; padding: 0 20px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 42%, rgba(255,255,255,0.05) 100%);
-            backdrop-filter: blur(22px) saturate(1.35) brightness(1.08);
-            -webkit-backdrop-filter: blur(22px) saturate(1.35) brightness(1.08);
-            border: 1px solid rgba(255,255,255,0.22);
-            border-radius: 28px;
+            max-width: 1140px; margin: 16px auto 0;
             display: flex; justify-content: space-between; align-items: center;
-            gap: 12px; padding: 10px 20px;
-            box-shadow:
-                0 10px 40px rgba(0,0,0,0.35),
-                inset 0 1px 0 rgba(255,255,255,0.38),
-                inset 0 -1px 0 rgba(255,255,255,0.06),
-                inset 18px 0 28px rgba(255,255,255,0.03);
-            transform: perspective(900px) rotateX(4deg);
-            transform-origin: top center;
-            transition: all 0.3s ease;
+            gap: 12px; padding: 10px 22px;
             position: relative;
-            overflow: hidden;
+            isolation: isolate;
+            overflow: visible;
+            border-radius: 9999px;
+            /* liquid glass: very thin veil, low blur, refractive SVG lens */
+            background: linear-gradient(
+                165deg,
+                rgba(255,255,255,0.055) 0%,
+                rgba(255,255,255,0.012) 42%,
+                rgba(255,255,255,0.03) 100%
+            );
+            border: 1px solid rgba(255,255,255,0.16);
+            -webkit-backdrop-filter: blur(4px) saturate(1.65);
+            backdrop-filter: blur(4px) saturate(1.65);
+            -webkit-backdrop-filter: url(#liquid-lens) blur(2.5px) saturate(1.7) brightness(1.04);
+            backdrop-filter: url(#liquid-lens) blur(2.5px) saturate(1.7) brightness(1.04);
+            box-shadow:
+                0 10px 36px rgba(0,0,0,0.28),
+                inset 0 1px 0 rgba(255,255,255,0.38),
+                inset 0 -1px 0 rgba(255,255,255,0.05),
+                inset 10px 0 16px rgba(255,255,255,0.025);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .nav-inner::before {
             content: '';
-            position: absolute; inset: 0;
-            background: linear-gradient(115deg, rgba(255,255,255,0.18) 0%, transparent 28%, transparent 68%, rgba(255,255,255,0.07) 100%);
+            position: absolute; inset: 1px;
+            border-radius: inherit;
             pointer-events: none;
-            mix-blend-mode: screen;
+            z-index: 0;
+            background: linear-gradient(118deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.03) 16%, transparent 38%);
+            mix-blend-mode: overlay;
+            opacity: 0.7;
         }
         .nav-inner::after {
             content: '';
-            position: absolute; top: -40%; left: 12%;
-            width: 42%; height: 90%;
-            background: radial-gradient(ellipse, rgba(255,255,255,0.16) 0%, transparent 70%);
-            transform: rotate(-18deg);
+            position: absolute; inset: 0;
+            border-radius: inherit;
             pointer-events: none;
+            z-index: 0;
+            box-shadow:
+                inset -10px -8px 0 -11px rgba(255,255,255,0.28),
+                inset 0 -9px 0 -8px rgba(255,255,255,0.12);
+            opacity: 0.55;
+            filter: blur(0.5px);
         }
+        .nav-links, .nav-controls { position: relative; z-index: 1; }
 
         .nav-links { display: flex; gap: 4px; align-items: center; }
         .nav-links a {
@@ -403,19 +418,18 @@
         .avatar-card {
             width: 100%; max-width: 380px; margin: 0 auto;
             padding: 32px 26px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03), rgba(0,0,0,0.55));
-            backdrop-filter: blur(24px);
-            border: 1px solid rgba(255,255,255,0.28);
+            background: rgba(255,255,255,0.035);
+            backdrop-filter: blur(16px) saturate(1.15);
+            -webkit-backdrop-filter: blur(16px) saturate(1.15);
+            border: 1px solid rgba(255,255,255,0.14);
             border-radius: 28px; text-align: center;
-            transition: transform 0.1s ease;
-            box-shadow: 0 24px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow:
+                0 20px 50px rgba(0,0,0,0.38),
+                inset 0 1px 0 rgba(255,255,255,0.16);
             position: relative; overflow: hidden;
         }
-        .avatar-card::before {
-            content: ''; position: absolute; inset: 0; border-radius: 28px;
-            background: conic-gradient(from 180deg at 50% 0%, var(--accent1), var(--accent2), transparent 40%);
-            opacity: 0.08; pointer-events: none;
-        }
+        .avatar-card::before { display: none; }
         .avatar-img-wrap {
             position: relative; width: 120px; margin: 0 auto 20px;
         }
@@ -443,7 +457,7 @@
             border: 1px solid rgba(255,255,255,0.25);
             font-family: var(--font-en);
         }
-        .avatar-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .avatar-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .stat-item {
             padding: 14px 6px; background: rgba(0,0,0,0.3); border-radius: 14px;
             border: 1px solid var(--surface-border); transition: 0.3s;
@@ -698,7 +712,7 @@
             .hero-desc { max-width: 100%; }
             .hero-btns, .hero-roles { justify-content: center; }
 
-            .nav-inner { transform: none; }
+            .nav-inner { border-radius: 24px; }
             .nav-links {
                 display: none; position: fixed; inset: 0; top: 72px;
                 background: rgba(0,0,0,0.92); backdrop-filter: blur(28px);
@@ -720,7 +734,7 @@
             .wrapper { padding: 0 18px; }
             .avatar-card { padding: 24px 18px; }
             .contact-grid { grid-template-columns: repeat(2, 1fr); }
-            .nav-inner { padding: 8px 16px; transform: none; border-radius: 22px; }
+            .nav-inner { padding: 8px 16px; border-radius: 22px; }
         }
 
         /* ─── CERTIFICATES TICKER ──────────────────────── */
@@ -819,6 +833,17 @@
     </style>
 </head>
 <body>
+    <!-- Liquid Glass SVG lens (inline — required for backdrop-filter: url()) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <defs>
+            <filter id="liquid-lens" x="-12%" y="-40%" width="124%" height="180%" color-interpolation-filters="sRGB">
+                <feTurbulence type="fractalNoise" baseFrequency="0.008 0.018" numOctaves="2" seed="4" result="n"/>
+                <feGaussianBlur in="n" stdDeviation="0.55" result="soft"/>
+                <feDisplacementMap in="SourceGraphic" in2="soft" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </defs>
+    </svg>
+
     <!-- AMBIENT BLOBS -->
     <div class="blob blob1" aria-hidden="true"></div>
     <div class="blob blob2" aria-hidden="true"></div>
@@ -922,11 +947,6 @@
                                 <div class="stat-lbl t-fa">پروژه موفق</div>
                                 <div class="stat-lbl t-en">Projects</div>
                             </div>
-                            <div class="stat-item">
-                                <div class="stat-num">98٪</div>
-                                <div class="stat-lbl t-fa">رضایت</div>
-                                <div class="stat-lbl t-en">Satisfaction</div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1023,14 +1043,14 @@
             </div>
             <div class="experience-timeline reveal">
                 <div class="experience-item">
-                    <span class="experience-date"><time datetime="2024/2026">2024 – 2026</time></span>
+                    <span class="experience-date"><time datetime="2022/2023">2022 – 2023</time></span>
                     <h3 class="experience-role">
-                        <span class="t-fa">بنیانگذار و مدیرعامل</span>
-                        <span class="t-en">Founder & CEO</span>
+                        <span class="t-fa">پروژه‌های فریلنسری و IoT</span>
+                        <span class="t-en">Freelance & IoT Projects</span>
                     </h3>
-                    <p class="experience-company">MZA Studio — AI & Technology</p>
-                    <p class="experience-desc t-fa">مدیریت و رهبری شرکت MZA، گروه/شرکت فناوری تخصصی در حوزه هوش مصنوعی. طراحی معماری چت‌بات‌های هوشمند، تحلیل اسناد و تولید محتوای خودکار با FastAPI.</p>
-                    <p class="experience-desc t-en">Leading MZA Studio, a specialized AI technology company. Architecting intelligent chatbot systems, document analysis tools, and automated content generation using FastAPI.</p>
+                    <p class="experience-company">Smart Home & Automation</p>
+                    <p class="experience-desc t-fa">ساخت ماکت خانه هوشمند با Arduino UNO و پایتون. توسعه اسکریپت‌های خودکارسازی و ربات‌های تلگرامی برای کسب‌وکارها.</p>
+                    <p class="experience-desc t-en">Built a smart home prototype with Arduino UNO and Python. Developed automation scripts and Telegram bots for various clients.</p>
                 </div>
                 <div class="experience-item">
                     <span class="experience-date"><time datetime="2023/2025">2023 – 2025</time></span>
@@ -1043,14 +1063,14 @@
                     <p class="experience-desc t-en">Developed MZA AI, a self-built AI assistant with advanced chat and analysis capabilities. Built ticket support system, user management, and participated in game development with Godot Engine.</p>
                 </div>
                 <div class="experience-item">
-                    <span class="experience-date"><time datetime="2022/2023">2022 – 2023</time></span>
+                    <span class="experience-date"><time datetime="2024/2026">2024 – 2026</time></span>
                     <h3 class="experience-role">
-                        <span class="t-fa">پروژه‌های فریلنسری و IoT</span>
-                        <span class="t-en">Freelance & IoT Projects</span>
+                        <span class="t-fa">بنیانگذار و مدیرعامل</span>
+                        <span class="t-en">Founder & CEO</span>
                     </h3>
-                    <p class="experience-company">Smart Home & Automation</p>
-                    <p class="experience-desc t-fa">ساخت ماکت خانه هوشمند با Arduino UNO و پایتون. توسعه اسکریپت‌های خودکارسازی و ربات‌های تلگرامی برای کسب‌وکارها.</p>
-                    <p class="experience-desc t-en">Built a smart home prototype with Arduino UNO and Python. Developed automation scripts and Telegram bots for various clients.</p>
+                    <p class="experience-company">MZA Studio — AI & Technology</p>
+                    <p class="experience-desc t-fa">مدیریت و رهبری شرکت MZA، گروه/شرکت فناوری تخصصی در حوزه هوش مصنوعی. طراحی معماری چت‌بات‌های هوشمند، تحلیل اسناد و تولید محتوای خودکار با FastAPI.</p>
+                    <p class="experience-desc t-en">Leading MZA Studio, a specialized AI technology company. Architecting intelligent chatbot systems, document analysis tools, and automated content generation using FastAPI.</p>
                 </div>
             </div>
         </div>
@@ -1497,14 +1517,14 @@
             if (avatarWrap && avatarCard) {
                 avatarWrap.addEventListener('mousemove', e => {
                     const r  = avatarWrap.getBoundingClientRect();
-                    const rx = ((e.clientY - r.top)  / r.height - 0.5) * 14;
-                    const ry = (0.5 - (e.clientX - r.left) / r.width) * 14;
-                    avatarCard.style.transform  = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
-                    avatarCard.style.transition = 'transform 0.08s ease';
+                    const rx = ((e.clientY - r.top)  / r.height - 0.5) * 6;
+                    const ry = (0.5 - (e.clientX - r.left) / r.width) * 6;
+                    avatarCard.style.transform  = `perspective(1100px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+                    avatarCard.style.transition = 'transform 0.18s ease';
                 });
                 avatarWrap.addEventListener('mouseleave', () => {
-                    avatarCard.style.transform  = 'perspective(900px) rotateX(0deg) rotateY(0deg)';
-                    avatarCard.style.transition = 'transform 0.7s ease';
+                    avatarCard.style.transform  = 'perspective(1100px) rotateX(0deg) rotateY(0deg)';
+                    avatarCard.style.transition = 'transform 0.85s ease';
                 });
             }
         }
